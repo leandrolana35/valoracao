@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valoração de Anúncios Digitais · Estudo de Viabilidade</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=Spline+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0b1120; --ink2:#0f1a30; --panel:#13203a; --panel2:#172741;
+  --line:#243css; --line:#26344f; --paper:#f4efe6;
+  --txt:#dce3f0; --mut:#8a98b5; --faint:#5d6a87;
+  --gold:#e6a93c; --gold2:#f4c46a; --teal:#34d3c2; --teal2:#6fe9db;
+  --red:#ff6b6b; --green:#7ed957;
+  --serif:'Fraunces',Georgia,serif; --sans:'Spline Sans',sans-serif; --mono:'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--txt);font-family:var(--sans);line-height:1.6;
+  background-image:radial-gradient(circle at 18% 8%,rgba(52,211,194,.07),transparent 42%),radial-gradient(circle at 85% 0%,rgba(230,169,60,.08),transparent 40%);
+  background-attachment:fixed}
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+section{padding:78px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--teal);margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.eyebrow::before{content:"";width:30px;height:1px;background:var(--teal);display:inline-block}
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.08;letter-spacing:-.01em}
+.mono{font-family:var(--mono)}
+
+/* HERO */
+.hero{padding:96px 0 78px;position:relative;overflow:hidden}
+.hero .grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:46px 46px;mask-image:radial-gradient(circle at 30% 30%,black,transparent 75%);pointer-events:none}
+.hero h1{font-size:clamp(40px,6.4vw,82px);font-weight:900;letter-spacing:-.03em;margin:14px 0 22px}
+.hero h1 .it{font-style:italic;font-weight:400;color:var(--gold2)}
+.lede{font-size:19px;color:var(--mut);max-width:680px}
+.tagrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:34px}
+.tag{font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;padding:7px 13px;border:1px solid rgba(255,255,255,.12);border-radius:100px;color:var(--txt);background:rgba(255,255,255,.02)}
+.tag b{color:var(--teal2)}
+
+/* fluxo */
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:46px}
+.flow .step{background:var(--panel);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:20px 18px;position:relative}
+.flow .step .n{font-family:var(--mono);font-size:12px;color:var(--gold)}
+.flow .step h4{font-family:var(--sans);font-weight:600;font-size:15px;margin:8px 0 5px}
+.flow .step p{font-size:13px;color:var(--mut);line-height:1.5}
+.flow .step:not(:last-child)::after{content:"→";position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:var(--faint);font-size:15px;z-index:2}
+
+h2{font-size:clamp(28px,3.6vw,42px);margin-bottom:14px}
+.sec-lede{color:var(--mut);max-width:720px;font-size:16px;margin-bottom:8px}
+
+/* fórmulas */
+.formulas{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:40px}
+.fcard{border-radius:18px;padding:30px;position:relative;overflow:hidden}
+.fcard.old{background:linear-gradient(160deg,#1c1812,#14110b);border:1px solid rgba(230,169,60,.28)}
+.fcard.new{background:linear-gradient(160deg,#0d211f,#0a1a23);border:1px solid rgba(52,211,194,.3)}
+.fcard .badge{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;padding:5px 11px;border-radius:6px;display:inline-block;margin-bottom:18px}
+.fcard.old .badge{color:var(--gold2);background:rgba(230,169,60,.13)}
+.fcard.new .badge{color:var(--teal2);background:rgba(52,211,194,.13)}
+.fcard h3{font-size:21px;margin-bottom:18px}
+.eq{font-family:var(--mono);font-size:13.5px;line-height:1.9;background:rgba(0,0,0,.32);border-radius:10px;padding:16px 18px;color:#eef3fb;overflow-x:auto}
+.eq .v{color:var(--gold2)} .fcard.new .eq .v{color:var(--teal2)}
+.eq .k{color:var(--red)}
+.legend{margin-top:18px;font-size:13px;color:var(--mut)}
+.legend div{padding:3px 0;display:flex;gap:9px}
+.legend .dot{flex:none;width:8px;height:8px;border-radius:50%;margin-top:8px}
+
+/* métricas impacto */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:42px}
+.kpi{background:var(--panel);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:22px}
+.kpi .num{font-family:var(--serif);font-weight:600;font-size:38px;letter-spacing:-.02em;line-height:1}
+.kpi .num.t{color:var(--teal2)} .kpi .num.g{color:var(--gold2)} .kpi .num.r{color:var(--red)}
+.kpi .lbl{font-size:12.5px;color:var(--mut);margin-top:9px}
+
+/* barras de distribuição */
+.dist{margin-top:40px;background:var(--panel);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:28px}
+.dist h3{font-family:var(--sans);font-weight:600;font-size:15px;margin-bottom:4px}
+.dist .sub{font-size:12.5px;color:var(--faint);margin-bottom:22px;font-family:var(--mono)}
+.bar{display:grid;grid-template-columns:170px 1fr 54px;align-items:center;gap:14px;margin:11px 0}
+.bar .name{font-size:13px;color:var(--mut)}
+.bar .track{height:14px;background:rgba(255,255,255,.05);border-radius:7px;overflow:hidden}
+.bar .fill{height:100%;border-radius:7px;transform-origin:left;animation:grow 1s cubic-bezier(.2,.8,.2,1) both}
+@keyframes grow{from{transform:scaleX(0)}}
+.bar .val{font-family:var(--mono);font-size:13px;text-align:right;color:var(--txt)}
+
+/* gargalos */
+.gargalos{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:40px}
+.gcard{background:var(--panel);border:1px solid rgba(255,255,255,.07);border-left:3px solid var(--red);border-radius:12px;padding:22px 24px}
+.gcard h4{font-family:var(--sans);font-weight:600;font-size:15.5px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.gcard .pill{font-family:var(--mono);font-size:10.5px;padding:3px 8px;border-radius:5px;background:rgba(255,107,107,.14);color:var(--red);letter-spacing:.05em}
+.gcard p{font-size:13.5px;color:var(--mut);margin-bottom:10px}
+.gcard .fix{font-size:13px;color:var(--teal2);background:rgba(52,211,194,.08);border-radius:8px;padding:9px 12px;font-family:var(--sans)}
+.gcard .fix b{color:var(--teal2)}
+
+/* calculadora */
+.calc{background:linear-gradient(165deg,var(--panel2),var(--ink2));border:1px solid rgba(255,255,255,.09);border-radius:20px;padding:34px;margin-top:42px;display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.calc .inputs label{display:block;font-size:12.5px;color:var(--mut);margin:14px 0 6px;font-family:var(--mono);letter-spacing:.03em}
+.calc input,.calc select{width:100%;background:var(--ink);border:1px solid rgba(255,255,255,.13);color:var(--txt);border-radius:9px;padding:11px 13px;font-family:var(--mono);font-size:14px;transition:border .2s}
+.calc input:focus{outline:none;border-color:var(--teal)}
+.calc .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.calc .params{margin-top:22px;padding-top:18px;border-top:1px dashed rgba(255,255,255,.12);font-size:11.5px;color:var(--faint);font-family:var(--mono);line-height:1.8}
+.results .rrow{display:flex;justify-content:space-between;align-items:baseline;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+.results .rrow .rl{font-size:13px;color:var(--mut)}
+.results .rrow .rv{font-family:var(--mono);font-size:20px;font-weight:500}
+.results .rrow.final .rv{font-size:26px;color:var(--teal2)}
+.results .rrow.old .rv{color:var(--gold2)}
+.status-chip{display:inline-block;margin-top:18px;font-family:var(--mono);font-size:12px;padding:9px 15px;border-radius:8px;letter-spacing:.04em}
+.s-ok{background:rgba(126,217,87,.13);color:var(--green)}
+.s-cap{background:rgba(230,169,60,.15);color:var(--gold2)}
+.s-block{background:rgba(255,107,107,.15);color:var(--red)}
+
+/* veredito */
+.verdict{background:linear-gradient(160deg,#0d211f,#0c1526);border:1px solid rgba(52,211,194,.25);border-radius:20px;padding:42px;margin-top:18px}
+.verdict h2{margin-bottom:18px}
+.verdict ul{list-style:none;margin-top:10px}
+.verdict li{padding:10px 0 10px 30px;position:relative;color:var(--txt);font-size:15.5px}
+.verdict li::before{content:"";position:absolute;left:0;top:16px;width:13px;height:13px;border:2px solid var(--teal);border-radius:50%}
+.verdict li.check::before{background:var(--teal);border-color:var(--teal)}
+
+footer{padding:44px 0;text-align:center;color:var(--faint);font-size:12.5px;font-family:var(--mono)}
+.dl{display:inline-flex;align-items:center;gap:9px;margin-top:8px;font-family:var(--mono);font-size:13px;color:var(--teal2);text-decoration:none;border:1px solid rgba(52,211,194,.3);padding:11px 18px;border-radius:10px}
+
+@media(max-width:860px){
+  .flow,.kpis,.formulas,.gargalos,.calc{grid-template-columns:1fr}
+  .flow .step::after{display:none}
+  .bar{grid-template-columns:120px 1fr 48px}
+}
+
+/* ---- UPLOAD / ANÁLISE ---- */
+.upl-wrap{margin-top:42px}
+.dropzone{border:2px dashed rgba(52,211,194,.4);border-radius:18px;padding:46px 30px;text-align:center;background:rgba(52,211,194,.04);transition:.2s;cursor:pointer}
+.dropzone.drag{background:rgba(52,211,194,.12);border-color:var(--teal)}
+.dropzone h3{font-family:var(--sans);font-weight:600;font-size:17px;margin-bottom:8px}
+.dropzone p{color:var(--mut);font-size:13.5px}
+.dropzone .ic{font-size:34px;color:var(--teal2);margin-bottom:10px}
+.dropzone .btn{display:inline-block;margin-top:16px;font-family:var(--mono);font-size:13px;color:var(--ink);background:var(--teal2);padding:11px 20px;border-radius:9px;font-weight:600}
+.ctrls{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:24px}
+.ctrls .c label{display:block;font-family:var(--mono);font-size:11px;color:var(--mut);margin-bottom:6px;letter-spacing:.03em}
+.ctrls .c input,.ctrls .c select{width:100%;background:var(--ink);border:1px solid rgba(255,255,255,.13);color:var(--txt);border-radius:9px;padding:10px 12px;font-family:var(--mono);font-size:13px}
+.ctrls .c input:focus,.ctrls .c select:focus{outline:none;border-color:var(--teal)}
+.analyzed{margin-top:30px;display:none}
+.analyzed.show{display:block;animation:fade .5s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}}
+.note-bad{background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.3);color:#ffb4b4;border-radius:10px;padding:12px 16px;font-size:13px;margin-top:18px;font-family:var(--mono)}
+.tablewrap{margin-top:26px;overflow-x:auto;border:1px solid rgba(255,255,255,.08);border-radius:14px}
+table.res{width:100%;border-collapse:collapse;font-size:12.5px;min-width:880px}
+table.res th{background:#0e1830;color:var(--mut);font-family:var(--mono);font-weight:500;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;padding:11px 12px;text-align:left;position:sticky;top:0}
+table.res td{padding:10px 12px;border-top:1px solid rgba(255,255,255,.05);font-family:var(--mono);white-space:nowrap}
+table.res td.name{font-family:var(--sans);white-space:normal;min-width:140px;color:var(--txt)}
+table.res tr:hover td{background:rgba(255,255,255,.02)}
+.st{display:inline-block;font-size:10.5px;padding:3px 8px;border-radius:5px;letter-spacing:.03em}
+.st.ok{background:rgba(126,217,87,.13);color:var(--green)}
+.st.cap{background:rgba(230,169,60,.15);color:var(--gold2)}
+.st.block{background:rgba(255,107,107,.15);color:var(--red)}
+.st.var{background:rgba(140,160,200,.13);color:#aab8d8}
+.tablefoot{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:#0e1830;font-size:12px;color:var(--faint);font-family:var(--mono)}
+.dl-csv{font-family:var(--mono);font-size:12.5px;color:var(--teal2);text-decoration:none;border:1px solid rgba(52,211,194,.3);padding:8px 14px;border-radius:8px}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<header class="hero">
+  <div class="grid-bg"></div>
+  <div class="wrap">
+    <div class="eyebrow">Estudo de viabilidade · Valoração v2</div>
+    <h1>Quanto vale, de fato,<br>um <span class="it">anúncio digital?</span></h1>
+    <p class="lede">Migração do modelo legado de valoração para uma nova lógica baseada na tabela de mercado da <b>Jovedata</b>, conversão de pixels para cm² e o fator de audiência do <b>Similarweb</b>. Este painel compara os dois modelos sobre a massa de dados de exemplo e mede o impacto real nos valores cobrados dos clientes.</p>
+    <div class="tagrow">
+      <span class="tag">Base amostra: <b>169 portais</b></span>
+      <span class="tag"><b>3.810</b> anúncios digitais</span>
+      <span class="tag">Fonte: <b>INT102025 (Jovedata)</b></span>
+      <span class="tag">Janela: <b>out/2025</b></span>
+    </div>
+
+    <div class="flow">
+      <div class="step"><div class="n">01</div><h4>Preço de mercado</h4><p>Puxa o preço do banner direto da tabela Jovedata, por portal e canal.</p></div>
+      <div class="step"><div class="n">02</div><h4>Pixels → cm²</h4><p>Converte a área em pixels para cm² pela constante de densidade (≈96 DPI).</p></div>
+      <div class="step"><div class="n">03</div><h4>Fator Similarweb</h4><p>Pondera pelo peso de audiência do portal medido pelo Similarweb.</p></div>
+      <div class="step"><div class="n">04</div><h4>Trava de transição</h4><p>Limita a oscilação dentro de uma banda segura antes de cobrar do cliente.</p></div>
+    </div>
+  </div>
+</header>
+
+<!-- FÓRMULAS -->
+<section id="formulas">
+  <div class="wrap">
+    <div class="eyebrow">As duas lógicas</div>
+    <h2>Modelo antigo × modelo novo</h2>
+    <p class="sec-lede">O modelo legado divide o preço interno por uma constante fixa. O novo deriva o preço por cm² do próprio banner e o escala pela área capturada e pela audiência.</p>
+
+    <div class="formulas">
+      <div class="fcard old">
+        <span class="badge">Legado · a confirmar</span>
+        <h3>Modelo Antigo</h3>
+        <div class="eq">Valor = ( <span class="v">Preço_Interno</span> / <span class="k">17,55</span> ) × <span class="v">Área_Capturada_cm²</span></div>
+        <div class="legend">
+          <div><span class="dot" style="background:var(--gold2)"></span> Preço vem do sistema interno (não do mercado).</div>
+          <div><span class="dot" style="background:var(--red)"></span> Constante fixa 17,55 — não reflete tamanho real do banner nem audiência.</div>
+        </div>
+      </div>
+      <div class="fcard new">
+        <span class="badge">Novo · Jovedata + Similarweb</span>
+        <h3>Modelo Novo</h3>
+        <div class="eq">Valor = ( <span class="v">Preço_Jovedata</span> / ( (<span class="v">Larg_px</span>×<span class="v">Alt_px</span>) / <span class="k">1428,84</span> ) ) × <span class="v">Área_Capturada_cm²</span> × <span class="v">Fator_Similarweb</span></div>
+        <div class="legend">
+          <div><span class="dot" style="background:var(--teal2)"></span> Preço de mercado por cm² do banner real.</div>
+          <div><span class="dot" style="background:var(--teal2)"></span> Audiência entra explicitamente via Similarweb.</div>
+          <div><span class="dot" style="background:var(--red)"></span> Sensível: banner minúsculo ⇒ denominador → 0 ⇒ valor dispara.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IMPACTO -->
+<section id="impacto">
+  <div class="wrap">
+    <div class="eyebrow">Comparativo de impacto</div>
+    <h2>O que muda no bolso do cliente</h2>
+    <p class="sec-lede">Rodando as duas fórmulas sobre os 3.810 anúncios da base Jovedata (mesma base de preço nos dois modelos, para isolar o efeito da fórmula):</p>
+
+    <div class="kpis">
+      <div class="kpi"><div class="num t">74,4%</div><div class="lbl">dos anúncios são calculáveis no modelo novo</div></div>
+      <div class="kpi"><div class="num r">977</div><div class="lbl">linhas travam por dimensão zerada (÷0)</div></div>
+      <div class="kpi"><div class="num g">0,42×</div><div class="lbl">mediana Novo/Antigo — tendência de queda</div></div>
+      <div class="kpi"><div class="num r">25.076×</div><div class="lbl">maior disparo isolado (banner 1×1 px)</div></div>
+    </div>
+
+    <div class="dist">
+      <h3>Distribuição do impacto · razão Valor Novo ÷ Valor Antigo</h3>
+      <div class="sub">2.833 anúncios calculáveis · sem travas aplicadas</div>
+      <div class="bar"><div class="name">Cai mais de 50%</div><div class="track"><div class="fill" style="width:55%;background:linear-gradient(90deg,#ff6b6b,#ff9a6b);animation-delay:.05s"></div></div><div class="val">1.566</div></div>
+      <div class="bar"><div class="name">Cai 20–50%</div><div class="track"><div class="fill" style="width:6%;background:linear-gradient(90deg,#e6a93c,#f4c46a);animation-delay:.12s"></div></div><div class="val">158</div></div>
+      <div class="bar"><div class="name">Estável (±25%)</div><div class="track"><div class="fill" style="width:29%;background:linear-gradient(90deg,#34d3c2,#6fe9db);animation-delay:.19s"></div></div><div class="val">813</div></div>
+      <div class="bar"><div class="name">Sobe 25–100%</div><div class="track"><div class="fill" style="width:3%;background:linear-gradient(90deg,#e6a93c,#f4c46a);animation-delay:.26s"></div></div><div class="val">31</div></div>
+      <div class="bar"><div class="name">Dispara acima de 2×</div><div class="track"><div class="fill" style="width:10%;background:linear-gradient(90deg,#ff6b6b,#ff5b8a);animation-delay:.33s"></div></div><div class="val">265</div></div>
+    </div>
+    <p class="sec-lede" style="margin-top:26px">Leitura: <b style="color:var(--gold2)">o modelo novo cru tende a derrubar a maioria dos valores</b> (mediana 0,42×), mas tem uma cauda perigosa de <b style="color:var(--red)">disparos</b> em banners pequenos. Na amostra de 39 linhas do Excel, o total sem trava chega a <b class="mono">R$ 4,25 bi</b> contra <b class="mono">R$ 36,7 mi</b> do antigo — distorção causada por poucos outliers. Com as travas, o total fecha em <b style="color:var(--teal2)" class="mono">R$ 38,6 mi (+5%)</b>: dentro de uma banda saudável.</p>
+  </div>
+</section>
+
+<!-- GARGALOS -->
+<section id="gargalos">
+  <div class="wrap">
+    <div class="eyebrow">Gargalos & regras de transição</div>
+    <h2>Onde o modelo quebra — e como travar</h2>
+    <p class="sec-lede">Quatro padrões de risco identificados na massa de dados, com a trava proposta para cada um.</p>
+
+    <div class="gargalos">
+      <div class="gcard">
+        <h4><span class="pill">÷ 0</span> Dimensão zerada</h4>
+        <p>977 anúncios (25,6%) vêm com altura ou largura em 0 px — vídeos, CPM, formatos sem medida. O denominador zera e a fórmula nova explode/quebra.</p>
+        <div class="fix"><b>Trava:</b> se Larg×Alt = 0 → não aplica modelo novo; mantém o <b>valor legado</b> como fallback até a dimensão ser preenchida.</div>
+      </div>
+      <div class="gcard">
+        <h4><span class="pill">↑↑</span> Banner minúsculo dispara</h4>
+        <p>Banners 1×1, 20×120 etc. geram preço por cm² altíssimo. Ex.: "Publi Editorial" 1×1 px a R$17.538 sobe 25.076× sobre o antigo.</p>
+        <div class="fix"><b>Trava (teto):</b> Valor Novo limitado a <b>2× o valor antigo</b>. Acima disso, sinaliza para revisão manual.</div>
+      </div>
+      <div class="gcard">
+        <h4><span class="pill">audiência = 0</span> Portal sem Similarweb</h4>
+        <p>Portais novos ou de nicho podem vir sem dado de audiência. Fator 0 zera o valor do anúncio indevidamente.</p>
+        <div class="fix"><b>Trava:</b> Fator ausente/zero → assume <b>fator neutro = 1,0</b> e marca o portal para auditoria de audiência.</div>
+      </div>
+      <div class="gcard">
+        <h4><span class="pill">↓↓</span> Queda generalizada</h4>
+        <p>Mediana de 0,42× indica que muitos clientes seriam subprecificados, com perda de receita relevante na virada.</p>
+        <div class="fix"><b>Trava (piso):</b> Valor Novo não cai abaixo de <b>0,5× o valor antigo</b>, suavizando a transição comercial.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CALCULADORA -->
+<section id="calc">
+  <div class="wrap">
+    <div class="eyebrow">Simulador ao vivo</div>
+    <h2>Teste um anúncio</h2>
+    <p class="sec-lede">Ajuste os parâmetros e veja, lado a lado, o valor antigo, o novo cru e o novo já com as travas de transição.</p>
+
+    <div class="calc">
+      <div class="inputs">
+        <div class="two">
+          <div><label>Largura (px)</label><input id="lar" type="number" value="970"></div>
+          <div><label>Altura (px)</label><input id="alt" type="number" value="250"></div>
+        </div>
+        <div class="two">
+          <div><label>Preço Jovedata (R$)</label><input id="pj" type="number" value="649518"></div>
+          <div><label>Preço interno legado (R$)</label><input id="pi" type="number" value="649518"></div>
+        </div>
+        <div class="two">
+          <div><label>Área capturada (cm²)</label><input id="ac" type="number" value="246.5"></div>
+          <div><label>Fator Similarweb</label><input id="fs" type="number" step="0.01" value="3.00"></div>
+        </div>
+        <div class="params">
+          K_NOVO = 1428,84 px²/cm² &nbsp;·&nbsp; K_ANTIGO = 17,55<br>
+          Teto = 2,00× &nbsp;·&nbsp; Piso = 0,50× &nbsp;·&nbsp; Banda estável = 0,80–1,25×
+        </div>
+      </div>
+      <div class="results">
+        <div class="rrow old"><span class="rl">Valor ANTIGO</span><span class="rv" id="rOld">—</span></div>
+        <div class="rrow"><span class="rl">Valor NOVO (cru)</span><span class="rv" id="rNew">—</span></div>
+        <div class="rrow"><span class="rl">Razão Novo / Antigo</span><span class="rv" id="rRatio">—</span></div>
+        <div class="rrow final"><span class="rl">Valor FINAL (com trava)</span><span class="rv" id="rFinal">—</span></div>
+        <div id="chip" class="status-chip s-ok">—</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- UPLOAD / ANÁLISE DA PLANILHA DO CLIENTE -->
+<section id="analisar">
+  <div class="wrap">
+    <div class="eyebrow">Analise sua planilha</div>
+    <h2>Suba seus dados e rode os dois modelos</h2>
+    <p class="sec-lede">Envie a tabela de preços (CSV ou Excel — inclusive o formato bruto da Jovedata). O app calcula valor antigo, valor novo e valor final com trava para cada linha, e mostra o impacto agregado. Nada é enviado a servidores: o processamento acontece 100% no navegador.</p>
+
+    <div class="upl-wrap">
+      <div class="dropzone" id="dz">
+        <div class="ic">⬆</div>
+        <h3>Arraste o arquivo aqui ou clique para selecionar</h3>
+        <p>Formatos aceitos: .csv (delimitado por ; ou ,) e .xlsx — codificação Latin-1 ou UTF-8</p>
+        <span class="btn">Selecionar arquivo</span>
+        <input type="file" id="file" accept=".csv,.xlsx,.xls,.tsv" style="display:none">
+      </div>
+
+      <div class="ctrls">
+        <div class="c"><label>Área capturada (cm²)</label><input id="uAc" type="number" value="250"></div>
+        <div class="c"><label>Fator Similarweb padrão</label><input id="uFs" type="number" step="0.01" value="1.00"></div>
+        <div class="c"><label>Preço interno legado</label>
+          <select id="uPi"><option value="jove">= Preço Jovedata</option><option value="col">Usar coluna do arquivo</option></select></div>
+        <div class="c"><label>Teto / Piso da trava</label>
+          <select id="uTr"><option value="2|0.5">2,0× / 0,5×</option><option value="3|0.33">3,0× / 0,33×</option><option value="1.5|0.66">1,5× / 0,66×</option><option value="999|0">Sem trava</option></select></div>
+      </div>
+
+      <div id="uErr"></div>
+
+      <div class="analyzed" id="out">
+        <div class="kpis">
+          <div class="kpi"><div class="num t" id="kCalc">—</div><div class="lbl">linhas calculáveis no modelo novo</div></div>
+          <div class="kpi"><div class="num r" id="kBlock">—</div><div class="lbl">bloqueadas (dimensão/audiência zerada)</div></div>
+          <div class="kpi"><div class="num g" id="kMed">—</div><div class="lbl">mediana Novo/Antigo</div></div>
+          <div class="kpi"><div class="num t" id="kVar">—</div><div class="lbl">variação total final vs antigo (com trava)</div></div>
+        </div>
+
+        <div class="dist" style="margin-top:30px">
+          <h3>Distribuição do impacto · razão Novo ÷ Antigo</h3>
+          <div class="sub" id="distSub">—</div>
+          <div class="bar"><div class="name">Cai mais de 50%</div><div class="track"><div class="fill" id="b1" style="background:linear-gradient(90deg,#ff6b6b,#ff9a6b)"></div></div><div class="val" id="v1">0</div></div>
+          <div class="bar"><div class="name">Cai 20–50%</div><div class="track"><div class="fill" id="b2" style="background:linear-gradient(90deg,#e6a93c,#f4c46a)"></div></div><div class="val" id="v2">0</div></div>
+          <div class="bar"><div class="name">Estável (±25%)</div><div class="track"><div class="fill" id="b3" style="background:linear-gradient(90deg,#34d3c2,#6fe9db)"></div></div><div class="val" id="v3">0</div></div>
+          <div class="bar"><div class="name">Sobe 25–100%</div><div class="track"><div class="fill" id="b4" style="background:linear-gradient(90deg,#e6a93c,#f4c46a)"></div></div><div class="val" id="v4">0</div></div>
+          <div class="bar"><div class="name">Dispara acima de 2×</div><div class="track"><div class="fill" id="b5" style="background:linear-gradient(90deg,#ff6b6b,#ff5b8a)"></div></div><div class="val" id="v5">0</div></div>
+        </div>
+
+        <div class="tablewrap">
+          <table class="res">
+            <thead><tr><th>Portal</th><th>Anúncio</th><th>Alt</th><th>Lar</th><th>Preço Jove</th><th>V. Antigo</th><th>V. Novo</th><th>Razão</th><th>Status</th><th>V. Final</th></tr></thead>
+            <tbody id="tbody"></tbody>
+          </table>
+          <div class="tablefoot"><span id="tfoot">—</span><a href="#" class="dl-csv" id="dlCsv">↓ Baixar resultado completo (CSV)</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VEREDITO -->
+<section id="veredito" style="border:none">
+  <div class="wrap">
+    <div class="verdict">
+      <div class="eyebrow">Recomendação para bater o martelo</div>
+      <h2>O modelo é viável — com governança</h2>
+      <p class="sec-lede" style="color:var(--txt)">A nova lógica é tecnicamente sólida e traz o mercado (Jovedata) e a audiência (Similarweb) para dentro do preço. Sozinha, porém, ela oscila demais. A viabilidade depende das travas:</p>
+      <ul>
+        <li class="check">Implementar as 4 travas (÷0, teto 2×, piso 0,5×, fator neutro) antes de qualquer cobrança real.</li>
+        <li class="check">Tratar os 977 formatos sem dimensão junto à Jovedata — é o maior bloqueio (25,6% da base).</li>
+        <li class="check">Migração faseada: rodar os dois modelos em paralelo (shadow) por 1–2 ciclos e cobrar pela banda travada.</li>
+        <li>Confirmar a constante 17,55 do modelo antigo e a densidade 1428,84 com a engenharia.</li>
+        <li>Negociar com a Jovedata SLA de preenchimento de dimensão e cobertura de portais de nicho.</li>
+      </ul>
+      <a class="dl" href="./Modelo_Valoracao_Anuncios.xlsx" download>↓ Baixar modelo de entrada de dados (Excel)</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Estudo de viabilidade · valoração de anúncios digitais v2 · dados de exemplo Jovedata (INT102025) + fator Similarweb<br>
+  Premissa de amostra: preço interno legado = preço Jovedata, para isolar o efeito estrutural da fórmula.
+</footer>
+
+<script>
+const K_NOVO=1428.84, K_ANT=17.55, CAP=2.0, FLOOR=0.5, UP=1.25, LO=0.80;
+const $=id=>document.getElementById(id);
+const brl=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+function calc(){
+  const lar=+$('lar').value, alt=+$('alt').value, pj=+$('pj').value, pi=+$('pi').value, ac=+$('ac').value;
+  let fs=+$('fs').value; if(!fs||fs<=0) fs=1.0; // fator neutro
+  const old=(pi/K_ANT)*ac;
+  const areaBanner=(lar*alt)/K_NOVO;
+  const chip=$('chip');
+  $('rOld').textContent=brl(old);
+  if(areaBanner<=0){
+    $('rNew').textContent='BLOQUEADO';
+    $('rRatio').textContent='—';
+    $('rFinal').textContent=brl(old);
+    chip.className='status-chip s-block';
+    chip.textContent='⚠ DIM. ZERADA → fallback no valor legado';
+    return;
+  }
+  const novo=(pj/areaBanner)*ac*fs;
+  const ratio=old>0? novo/old : 0;
+  let final=novo, label='ESTÁVEL — dentro da banda', cls='s-ok';
+  if(ratio>CAP){ final=old*CAP; label='DISPARO ↑ travado no teto 2×'; cls='s-cap'; }
+  else if(ratio<FLOOR){ final=old*FLOOR; label='QUEDA ↓ travada no piso 0,5×'; cls='s-cap'; }
+  else if(ratio>UP||ratio<LO){ label='VARIAÇÃO moderada — sem trava'; cls='s-ok'; }
+  $('rNew').textContent=brl(novo);
+  $('rRatio').textContent=ratio.toFixed(2)+'×';
+  $('rFinal').textContent=brl(final);
+  chip.className='status-chip '+cls;
+  chip.textContent=label;
+}
+['lar','alt','pj','pi','ac','fs'].forEach(id=>$(id).addEventListener('input',calc));
+calc();
+
+
+/* ===================== MOTOR DE ANÁLISE DA PLANILHA ===================== */
+(function(){
+  const $=id=>document.getElementById(id);
+  const norm=s=>(s||'').toString().toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');
+  const COLS={
+    portal:['nomeportal','portal','veiculo','site'],
+    anuncio:['descanuncio','anuncio','formato','descricaoanuncio','peca'],
+    lar:['larfec','largura','largurapx','larpx','width','lar'],
+    alt:['altfec','altura','alturapx','altpx','height','alt'],
+    preco:['preco','precojovedata','valorjovedata','precobanner','precojove'],
+    areacap:['areacapturada','areacap','areacm2','areacapturadacm2'],
+    fator:['fatorsimilarweb','fatorsw','similarweb','fatoraudiencia'],
+    precoint:['precointerno','precointernosistema','precolegado','precoint']
+  };
+  function mapCols(headers){
+    const m={}; const H=headers.map(norm);
+    for(const key in COLS){
+      for(const cand of COLS[key]){
+        const i=H.indexOf(cand); if(i>=0){m[key]=i;break;}
+      }
+    }
+    return m;
+  }
+  function numBR(v){
+    if(v==null) return NaN;
+    if(typeof v==='number') return v;
+    let s=String(v).trim().replace(/\s/g,'');
+    if(s==='') return NaN;
+    // formato brasileiro: 3.201,20  -> remove pontos de milhar, vírgula vira ponto
+    if(s.indexOf(',')>=0){ s=s.replace(/\./g,'').replace(',','.'); }
+    return parseFloat(s);
+  }
+  // ---- leitura de arquivo ----
+  function parseCSVText(text){
+    // detecta delimitador
+    const head=text.split(/\r?\n/)[0]||'';
+    const delim=(head.split(';').length>head.split(',').length)?';':',';
+    const rows=[]; let row=[],cur='',q=false;
+    for(let i=0;i<text.length;i++){
+      const ch=text[i];
+      if(q){ if(ch==='"'){ if(text[i+1]==='"'){cur+='"';i++;} else q=false; } else cur+=ch; }
+      else{
+        if(ch==='"') q=true;
+        else if(ch===delim){ row.push(cur);cur=''; }
+        else if(ch==='\n'){ row.push(cur);rows.push(row);row=[];cur=''; }
+        else if(ch==='\r'){}
+        else cur+=ch;
+      }
+    }
+    if(cur!==''||row.length){ row.push(cur);rows.push(row); }
+    return rows.filter(r=>r.length>1 || (r.length===1 && r[0].trim()!==''));
+  }
+  function readFile(file){
+    return new Promise((res,rej)=>{
+      const ext=file.name.toLowerCase().split('.').pop();
+      if(ext==='xlsx'||ext==='xls'){
+        const r=new FileReader();
+        r.onload=e=>{
+          try{
+            const wb=XLSX.read(e.target.result,{type:'array'});
+            const ws=wb.Sheets[wb.SheetNames[0]];
+            const rows=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:''});
+            res(rows.filter(r=>r.length));
+          }catch(err){rej(err);}
+        };
+        r.onerror=rej; r.readAsArrayBuffer(file);
+      } else {
+        const r=new FileReader();
+        r.onload=e=>{
+          let txt=e.target.result;
+          // se vier com caracteres de substituição, tenta Latin-1
+          if(/\ufffd/.test(txt)){
+            const r2=new FileReader();
+            r2.onload=e2=>res(parseCSVText(e2.target.result));
+            r2.onerror=rej; r2.readAsText(file,'ISO-8859-1'); return;
+          }
+          res(parseCSVText(txt));
+        };
+        r.onerror=rej; r.readAsText(file,'UTF-8');
+      }
+    });
+  }
+
+  const K_NOVO=1428.84, K_ANT=17.55;
+  let lastResults=[];
+
+  function analyze(rows){
+    const err=$('uErr'); err.innerHTML='';
+    if(!rows||rows.length<2){ err.innerHTML='<div class="note-bad">Arquivo vazio ou sem linhas de dados.</div>'; return; }
+    const headers=rows[0].map(x=>String(x));
+    const m=mapCols(headers);
+    const miss=[];
+    if(m.lar==null) miss.push('largura (px)');
+    if(m.alt==null) miss.push('altura (px)');
+    if(m.preco==null) miss.push('preço');
+    if(miss.length){
+      err.innerHTML='<div class="note-bad">Não encontrei a(s) coluna(s): '+miss.join(', ')+
+        '. Cabeçalhos lidos: '+headers.slice(0,12).join(' · ')+'</div>';
+      return;
+    }
+    const Ac=parseFloat($('uAc').value)||0;
+    const Fdef=parseFloat($('uFs').value)||1;
+    const piMode=$('uPi').value;
+    const [CAP,FLOOR]=$('uTr').value.split('|').map(Number);
+
+    const out=[];
+    for(let i=1;i<rows.length;i++){
+      const r=rows[i]; if(!r||!r.length) continue;
+      const lar=numBR(r[m.lar]), alt=numBR(r[m.alt]), pj=numBR(r[m.preco]);
+      if(isNaN(pj)) continue;
+      let fs=(m.fator!=null)?numBR(r[m.fator]):NaN; if(isNaN(fs)||fs<=0) fs=Fdef;
+      let ac=(m.areacap!=null)?numBR(r[m.areacap]):NaN; if(isNaN(ac)||ac<=0) ac=Ac;
+      let pi=(piMode==='col'&&m.precoint!=null)?numBR(r[m.precoint]):pj; if(isNaN(pi)) pi=pj;
+      const portal=(m.portal!=null)?r[m.portal]:'—';
+      const anun=(m.anuncio!=null)?r[m.anuncio]:'—';
+      const old=(pi/K_ANT)*ac;
+      const areaB=(lar*alt)/K_NOVO;
+      let novo=null,ratio=null,status='',cls='',final;
+      if(!(areaB>0)){ status='DIM. ZERADA (trava)';cls='block';final=old; }
+      else{
+        novo=(pj/areaB)*ac*fs; ratio= old>0? novo/old : null;
+        if(ratio==null){ status='—';cls='var';final=novo; }
+        else if(ratio>CAP){ status='DISPARO ↑ (cap)';cls='cap';final=old*CAP; }
+        else if(ratio<FLOOR){ status='QUEDA ↓ (piso)';cls='cap';final=old*FLOOR; }
+        else if(ratio>=0.8&&ratio<=1.25){ status='ESTÁVEL';cls='ok';final=novo; }
+        else { status='VARIAÇÃO';cls='var';final=novo; }
+      }
+      out.push({portal,anun,alt,lar,pj,old,novo,ratio,status,cls,final});
+    }
+    if(!out.length){ err.innerHTML='<div class="note-bad">Nenhuma linha com preço válido encontrada.</div>'; return; }
+    lastResults=out;
+    render(out);
+  }
+
+  const brl=v=>v==null?'—':v.toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
+  function median(a){ if(!a.length) return null; const s=[...a].sort((x,y)=>x-y);const h=Math.floor(s.length/2);
+    return s.length%2?s[h]:(s[h-1]+s[h])/2; }
+
+  function render(out){
+    const calc=out.filter(o=>o.ratio!=null);
+    const ratios=calc.map(o=>o.ratio);
+    const blocked=out.filter(o=>o.cls==='block').length;
+    const med=median(ratios);
+    const sumOld=out.reduce((s,o)=>s+(o.old||0),0);
+    const sumFin=out.reduce((s,o)=>s+(o.final||0),0);
+    $('kCalc').textContent=calc.length.toLocaleString('pt-BR');
+    $('kBlock').textContent=blocked.toLocaleString('pt-BR');
+    $('kMed').textContent=med!=null?med.toFixed(2)+'×':'—';
+    const varPct= sumOld>0? (sumFin/sumOld-1) : 0;
+    $('kVar').textContent=(varPct>=0?'+':'')+(varPct*100).toFixed(1)+'%';
+    $('distSub').textContent=out.length.toLocaleString('pt-BR')+' linhas · '+calc.length.toLocaleString('pt-BR')+' calculáveis';
+
+    const f=[0,0,0,0,0];
+    ratios.forEach(r=>{ if(r<0.5)f[0]++; else if(r<0.8)f[1]++; else if(r<=1.25)f[2]++; else if(r<=2)f[3]++; else f[4]++; });
+    const mx=Math.max(1,...f);
+    for(let i=0;i<5;i++){ $('b'+(i+1)).style.width=(f[i]/mx*100)+'%'; $('v'+(i+1)).textContent=f[i].toLocaleString('pt-BR'); }
+
+    const tb=$('tbody'); tb.innerHTML='';
+    out.slice(0,200).forEach(o=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML='<td class="name">'+esc(o.portal)+'</td><td class="name">'+esc(o.anun)+'</td>'+
+        '<td>'+(o.alt||0)+'</td><td>'+(o.lar||0)+'</td><td>'+brl(o.pj)+'</td>'+
+        '<td>'+brl(o.old)+'</td><td>'+(o.novo==null?'<span class="st block">BLOQ.</span>':brl(o.novo))+'</td>'+
+        '<td>'+(o.ratio==null?'—':o.ratio.toFixed(2)+'×')+'</td>'+
+        '<td><span class="st '+o.cls+'">'+o.status+'</span></td><td>'+brl(o.final)+'</td>';
+      tb.appendChild(tr);
+    });
+    $('tfoot').textContent='Mostrando '+Math.min(200,out.length)+' de '+out.length.toLocaleString('pt-BR')+
+      ' linhas · Total antigo '+brl(sumOld)+' → final c/ trava '+brl(sumFin);
+    $('out').classList.add('show');
+    $('out').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+
+  function downloadCSV(){
+    if(!lastResults.length) return;
+    const head=['Portal','Anuncio','Alt_px','Lar_px','Preco_Jovedata','Valor_Antigo','Valor_Novo','Razao','Status','Valor_Final'];
+    const lines=[head.join(';')];
+    lastResults.forEach(o=>{
+      lines.push([o.portal,o.anun,o.alt||0,o.lar||0,fmt(o.pj),fmt(o.old),o.novo==null?'BLOQUEADO':fmt(o.novo),
+        o.ratio==null?'':o.ratio.toFixed(4),o.status,fmt(o.final)].map(csvCell).join(';'));
+    });
+    const blob=new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='resultado_valoracao.csv';a.click();
+  }
+  const fmt=v=>v==null?'':String(v.toFixed(2)).replace('.',',');
+  const csvCell=v=>{v=String(v); return /[;"\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+
+  // ---- wiring ----
+  const dz=$('dz'),fi=$('file');
+  dz.addEventListener('click',()=>fi.click());
+  ['dragover','dragenter'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('drag');}));
+  ['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('drag');}));
+  dz.addEventListener('drop',e=>{ if(e.dataTransfer.files[0]) handle(e.dataTransfer.files[0]); });
+  fi.addEventListener('change',e=>{ if(e.target.files[0]) handle(e.target.files[0]); });
+  ['uAc','uFs','uPi','uTr'].forEach(id=>$(id).addEventListener('change',()=>{ if(rawRows) analyze(rawRows); }));
+  $('dlCsv').addEventListener('click',e=>{e.preventDefault();downloadCSV();});
+
+  let rawRows=null;
+  function handle(file){
+    $('uErr').innerHTML='<div class="note-bad" style="background:rgba(52,211,194,.08);border-color:rgba(52,211,194,.3);color:#9fe7dd">Lendo '+esc(file.name)+'…</div>';
+    readFile(file).then(rows=>{ rawRows=rows; analyze(rows); })
+      .catch(err=>{ $('uErr').innerHTML='<div class="note-bad">Falha ao ler o arquivo: '+esc(err.message||err)+'</div>'; });
+  }
+})();
+
+</script>
+</body>
+</html>
